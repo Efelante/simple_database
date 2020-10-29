@@ -1,4 +1,6 @@
 #include <string>
+#include <map>
+#include <set>
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -71,6 +73,77 @@ ostream& operator<<(ostream &stream, const Date &date)
 	stream << setfill('0') << setw(2) << date.GetDay();
 	return stream;
 }
+
+void CheckDelimeterAndSkip(stringstream &stream)
+{
+	if (stream.peek() != '-'){
+		throw runtime_error("Wrong date format:");
+	} else {
+		stream.ignore(1);
+	}
+}
+
+void CheckMonth(int month)
+{
+	if (month < 1 || month > 12){
+		throw runtime_error("Month value is invalid: " + to_string(month));
+	} else {
+		// Do nothing
+	}
+}
+
+void CheckDay(int day)
+{
+	if (day < 1 || day > 31){
+		throw runtime_error("Day value is invalid: " + to_string(day));
+	} else {
+		// Do nothing
+	}
+}
+
+Date ParseDate(string date_string)
+{
+	stringstream date_stream(date_string);
+	int year;
+	int month;
+	int day;
+	if (date_stream >> year){
+		// Year is a number
+		// Read month and day
+		CheckDelimeterAndSkip(date_stream);
+		if (date_stream >> month){
+			// Month is a number
+			// Read the day
+			CheckDelimeterAndSkip(date_stream);
+			if (date_stream >> day){
+					string date_tail;
+					if(date_stream >> date_tail){
+							throw runtime_error("Wrong date format: " +
+											date_string);
+					} else {
+							CheckMonth(month);
+							CheckDay(day);
+							return Date(Year(year),
+											Month(month),
+											Day(day));
+					}
+			} else {
+				// Not a day
+				throw runtime_error("Wrong date format: " +
+						date_string);
+			}
+		} else {
+			// Not a month
+			throw runtime_error("Wrong date format: " +
+					date_string);
+		}
+	} else {
+		// Not a year
+		throw runtime_error("Wrong date format: " +
+				    date_string);
+	}
+
+}
 // Реализуйте функции и методы классов и при необходимости добавьте свои
 
 class Database {
@@ -82,6 +155,8 @@ public:
   ///* ??? */ Find(const Date& date) const;
   
   void Print() const;
+private:
+  map<Date, set<string>> database;
 };
 
 int main() {
@@ -94,13 +169,25 @@ int main() {
 	string command;
 	while (getline(cin, command)) {
 		stringstream input(command);
-		if (command == "Add"){
+		string operation;
+		input >> operation;
+		if (operation == "Add"){
 			cout << "Add command" << endl;
-		} else if (command == "Del"){
+			string date_string;
+			input >> date_string;
+			Date date;
+			try {
+				date = ParseDate(date_string);
+			} catch (exception &e){
+				cout << e.what() << endl;
+				return -1;
+			}
+			cout << date << endl;
+		} else if (operation == "Del"){
 			cout << "Del command" << endl;
-		} else if (command == "Find"){
+		} else if (operation == "Find"){
 			cout << "Find command" << endl;
-		} else if (command == "Print"){
+		} else if (operation == "Print"){
 			cout << "Print command" << endl;
 		} else {
 			cout << "Unknown command" << endl;
