@@ -168,29 +168,33 @@ int main() {
 
 	string command;
 	while (getline(cin, command)) {
-		stringstream input(command);
-		string operation;
-		input >> operation;
-		if (operation == "Add"){
-			cout << "Add command" << endl;
-			string date_string;
-			input >> date_string;
-			Date date;
-			try {
-				date = ParseDate(date_string);
-			} catch (exception &e){
-				cout << e.what() << endl;
-				return -1;
-			}
-			cout << date << endl;
-		} else if (operation == "Del"){
-			cout << "Del command" << endl;
-		} else if (operation == "Find"){
-			cout << "Find command" << endl;
-		} else if (operation == "Print"){
-			cout << "Print command" << endl;
+		if (command != ""){
+				stringstream input(command);
+				string operation;
+				input >> operation;
+				if (operation == "Add"){
+						cout << "Add command" << endl;
+						string date_string;
+						input >> date_string;
+						Date date;
+						try {
+								date = ParseDate(date_string);
+						} catch (exception &e){
+								cout << e.what() << endl;
+								return -1;
+						}
+						cout << date << endl;
+				} else if (operation == "Del"){
+						cout << "Del command" << endl;
+				} else if (operation == "Find"){
+						cout << "Find command" << endl;
+				} else if (operation == "Print"){
+						cout << "Print command" << endl;
+				} else {
+						cout << "Unknown command" << endl;
+				}
 		} else {
-			cout << "Unknown command" << endl;
+				// Empty command
 		}
 
 		// Считайте команды с потока ввода и обработайте каждую
