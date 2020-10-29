@@ -166,7 +166,16 @@ public:
 
 		///* ??? */ Find(const Date& date) const;
 
-		void Print() const;
+		void Print() const
+		{
+			for (const auto &record : database){
+				for (const auto &event : record.second){
+					cout << record.first << " " << 
+						event << 
+						endl;
+				}
+			}
+		}
 private:
 		map<Date, set<string>> database;
 };
@@ -205,6 +214,7 @@ int main() {
 						cout << "Find command" << endl;
 				} else if (operation == "Print"){
 						cout << "Print command" << endl;
+						db.Print();
 				} else {
 						cout << "Unknown command" << endl;
 				}
