@@ -47,7 +47,16 @@ private:
 	int day;
 };
 
-bool operator<(const Date& lhs, const Date& rhs);
+bool operator<(const Date& lhs, const Date& rhs)
+{
+	if (lhs.GetYear() != rhs.GetYear()){
+		return lhs.GetYear() < rhs.GetYear();
+	} else if (lhs.GetMonth() != rhs.GetMonth()){
+		return lhs.GetMonth() < rhs.GetMonth();
+	} else {
+		return lhs.GetDay() < rhs.GetDay();
+	} 
+}
 
 istream& operator>>(istream &stream, Date &date)
 {
@@ -148,15 +157,18 @@ Date ParseDate(string date_string)
 
 class Database {
 public:
-  void AddEvent(const Date& date, const string& event);
-  bool DeleteEvent(const Date& date, const string& event);
-  int  DeleteDate(const Date& date);
+		void AddEvent(const Date& date, const string& event)
+		{
+				database[date].insert(event);
+		}
+		bool DeleteEvent(const Date& date, const string& event);
+		int  DeleteDate(const Date& date);
 
-  ///* ??? */ Find(const Date& date) const;
-  
-  void Print() const;
+		///* ??? */ Find(const Date& date) const;
+
+		void Print() const;
 private:
-  map<Date, set<string>> database;
+		map<Date, set<string>> database;
 };
 
 int main() {
@@ -164,7 +176,7 @@ int main() {
 	//Date date2;
 	//cin >> date1 >> date2;
 	//cout << date1 << endl << date2 << endl;
-	//Database db;
+	Database db;
 
 	string command;
 	while (getline(cin, command)) {
@@ -184,6 +196,9 @@ int main() {
 								return -1;
 						}
 						cout << date << endl;
+						string event;
+						input >> event;
+						db.AddEvent(date, event);
 				} else if (operation == "Del"){
 						cout << "Del command" << endl;
 				} else if (operation == "Find"){
