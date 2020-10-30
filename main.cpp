@@ -172,7 +172,7 @@ public:
 						}
 				} else {
 						// No events at this date
-						return {};	
+						return false;
 				}
 		}
 		int  DeleteDate(const Date& date){
