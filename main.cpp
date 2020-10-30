@@ -161,10 +161,31 @@ public:
 		{
 				database[date].insert(event);
 		}
-		bool DeleteEvent(const Date& date, const string& event);
+		bool DeleteEvent(const Date& date, const string& event)
+		{
+				if (database.count(date) > 0){
+						if (database[date].count(event) > 0){
+								database[date].erase(event);
+								return true; 
+						} else {
+								return false;
+						}
+				} else {
+						// No events at this date
+						return {};	
+				}
+		}
 		int  DeleteDate(const Date& date);
 
-		///* ??? */ Find(const Date& date) const;
+		set<string> Find(const Date& date) const
+		{
+				if (database.count(date) > 0){
+						return database.at(date);
+				} else {
+						// No events at this date
+						return {};	
+				}
+		}
 
 		void Print() const
 		{
@@ -210,8 +231,40 @@ int main() {
 						db.AddEvent(date, event);
 				} else if (operation == "Del"){
 						cout << "Del command" << endl;
+						string date_string;
+						input >> date_string;
+						Date date;
+						try {
+								date = ParseDate(date_string);
+						} catch (exception &e){
+								cout << e.what() << endl;
+								return -1;
+						}
+						cout << date << endl;
+						string event;
+						if (input >> event){
+								if (db.DeleteEvent(date, event)){
+										cout << "Deleted successfully" << endl;
+								} else {
+										cout << "Event not found" << endl;
+
+								}
+						}
 				} else if (operation == "Find"){
 						cout << "Find command" << endl;
+						string date_string;
+						input >> date_string;
+						Date date;
+						try {
+								date = ParseDate(date_string);
+						} catch (exception &e){
+								cout << e.what() << endl;
+								return -1;
+						}
+						set<string> events = db.Find(date);
+						for (const auto &event : events){
+								cout << event << endl;
+						}
 				} else if (operation == "Print"){
 						cout << "Print command" << endl;
 						db.Print();
