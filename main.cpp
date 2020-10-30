@@ -276,7 +276,7 @@ int main() {
 				} else if (operation == "Print"){
 						db.Print();
 				} else {
-						cout << "Unknown command" << endl;
+						cout << "Unknown command: " << operation << endl;
 						return -1;
 				}
 		} else {
