@@ -175,7 +175,16 @@ public:
 						return {};	
 				}
 		}
-		int  DeleteDate(const Date& date);
+		int  DeleteDate(const Date& date){
+				int res = 0;
+				if (database.count(date) > 0){
+						res = database[date].size();
+						database[date].clear();
+				} else {
+						// No such a date. Return 0
+				}
+				return res;
+		}
 
 		set<string> Find(const Date& date) const
 		{
@@ -215,7 +224,6 @@ int main() {
 				string operation;
 				input >> operation;
 				if (operation == "Add"){
-						cout << "Add command" << endl;
 						string date_string;
 						input >> date_string;
 						Date date;
@@ -225,12 +233,10 @@ int main() {
 								cout << e.what() << endl;
 								return -1;
 						}
-						cout << date << endl;
 						string event;
 						input >> event;
 						db.AddEvent(date, event);
 				} else if (operation == "Del"){
-						cout << "Del command" << endl;
 						string date_string;
 						input >> date_string;
 						Date date;
@@ -240,7 +246,6 @@ int main() {
 								cout << e.what() << endl;
 								return -1;
 						}
-						cout << date << endl;
 						string event;
 						if (input >> event){
 								if (db.DeleteEvent(date, event)){
@@ -249,9 +254,12 @@ int main() {
 										cout << "Event not found" << endl;
 
 								}
+						} else {
+								// Delete all events for the date
+								int deleted = db.DeleteDate(date);
+								cout << "Deleted " << deleted << " events" << endl; 
 						}
 				} else if (operation == "Find"){
-						cout << "Find command" << endl;
 						string date_string;
 						input >> date_string;
 						Date date;
@@ -266,10 +274,10 @@ int main() {
 								cout << event << endl;
 						}
 				} else if (operation == "Print"){
-						cout << "Print command" << endl;
 						db.Print();
 				} else {
 						cout << "Unknown command" << endl;
+						return -1;
 				}
 		} else {
 				// Empty command
