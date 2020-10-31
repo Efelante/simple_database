@@ -86,7 +86,7 @@ ostream& operator<<(ostream &stream, const Date &date)
 void CheckDelimeterAndSkip(stringstream &stream)
 {
 	if (stream.peek() != '-'){
-		throw runtime_error("Wrong date format:");
+		throw runtime_error("Wrong date format: ");
 	} else {
 		stream.ignore(1);
 	}
@@ -119,16 +119,23 @@ Date ParseDate(string date_string)
 	if (date_stream >> year){
 		// Year is a number
 		// Read month and day
-		CheckDelimeterAndSkip(date_stream);
+		try {
+			CheckDelimeterAndSkip(date_stream);
+		} catch (exception &e) {
+			throw runtime_error("Wrong date format: " + date_string);
+		}
 		if (date_stream >> month){
 			// Month is a number
 			// Read the day
-			CheckDelimeterAndSkip(date_stream);
+			try {
+				CheckDelimeterAndSkip(date_stream);
+			} catch (exception &e) {
+				throw runtime_error("Wrong date format: " + date_string);
+			}
 			if (date_stream >> day){
 					string date_tail;
 					if(date_stream >> date_tail){
-							throw runtime_error("Wrong date format: " +
-											date_string);
+							throw runtime_error("Wrong date format: " + date_string);
 					} else {
 							CheckMonth(month);
 							CheckDay(day);
@@ -138,18 +145,15 @@ Date ParseDate(string date_string)
 					}
 			} else {
 				// Not a day
-				throw runtime_error("Wrong date format: " +
-						date_string);
+				throw runtime_error("Wrong date format: " + date_string);
 			}
 		} else {
 			// Not a month
-			throw runtime_error("Wrong date format: " +
-					date_string);
+			throw runtime_error("Wrong date format: " + date_string);
 		}
 	} else {
 		// Not a year
-		throw runtime_error("Wrong date format: " +
-				    date_string);
+		throw runtime_error("Wrong date format: " + date_string);
 	}
 
 }
